@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Review Creation</title>
+</head>
+<body>
+    <div class="ticket-container">
+        <div>
+            <h1>Review for :</h1>
+            <p>{{ticket.user}} posted this ticket</p>
+            <p>{{ticket.title}}</p>
+            <p>{{ticket.description}}</p>
+            <img src="{{ticket.image.url}}">
+        </div>
+        <div>
+            <h1>Create a Review</h1>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

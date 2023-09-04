@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Page de connexion</title>
+    </head>
+<body>
+    <div class="login-container">
+        <h1>Connectez-vous</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Se connecter">
+        </form>
+        <p>Pas encore de compte? <a href="{% url 'signup' %}">Inscrivez-vous</a></p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HomePage</title>
+    </head>
+<body>
+    <div class="container">
+        <h1>Welcome to the Homepage</h1>
+        <a href="{% url 'create-ticket' %}" class="btn btn-primary">Create a Ticket</a>
+        <a href="{% url 'create-review-and-ticket' %}" class="btn btn-primary">Create a Review</a>
+        <a href="{% url 'ticket-list' %}" class="btn btn-primary">My Tickets</a>
+        <a href="{% url 'review-list' %}" class="btn btn-primary">My Reviews</a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </div>
+</body>
+</html>

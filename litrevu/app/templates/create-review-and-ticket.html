@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ticket and Review Creation</title>
+    </head>
+<body>
+    <div class="ticket-container">
+        <h1>Create a Review</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <section class="ticket-form">
+                <div>Book / Article</div>
+                <div>
+                    {{ form.title.label_tag }}
+                    {{ form.title }}
+                    {{ form.description.label_tag }}
+                    {{ form.description }}
+                    {{ form.image.label_tag }}
+                    {{ form.image }}
+                </div>
+            </section>
+            <br>
+            <section class="review-form">
+                <div>Review</div>
+                <div>
+                    {{ form.review_headline.label_tag }}
+                    {{ form.review_headline }}
+                    {{ form.review_rating.label_tag }}
+                    {{ form.review_rating }}
+                    {{ form.review_body.label_tag }}
+                    {{ form.review_body }}
+                </div>
+            </section>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+</html>
