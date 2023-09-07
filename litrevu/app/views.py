@@ -155,10 +155,18 @@ class FollowUserView(FormView):
         user_to_follow = User.objects.get(username=follow_username)
         if user_to_follow:
             UserFollows.objects.create(user=self.request.user, followed_user=user_to_follow)
-
             return super().form_valid(form)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['user'] = self.request.user
         return kwargs
+
+
+class FollowedUsersView(ListView):
+    template_name = 'user-follow.html'
+    success_url = reverse_lazy('user-follow')
+    model = UserFollows
+    context_object_name = 'followed_users'
+
+
