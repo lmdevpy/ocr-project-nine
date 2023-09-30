@@ -1,16 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Sign Up</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
     <div class="signup-container">
-        <h1>Sign Up</h1>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" value="Sign Up">
+        <h4>Sign Up</h4>
+        <form method="post" class="border rounded p-3">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Sign Up</button>
         </form>
     </div>
-</body>
-</html>
+{% endblock %}

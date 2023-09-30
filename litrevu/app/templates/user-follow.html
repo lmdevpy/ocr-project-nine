@@ -1,26 +1,45 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    <div class="container">
-        <div class="follow-user">
-            <form method="post" action="{% url 'user-follow' %}">
-                {% csrf_token %}
-                <label for="follow_username">Search user:</label>
-                {{form.follow_username}}
-                {{form.follow_username.errors}}
-                <button type="submit">Follow</button>
-            </form>
-        </div>
-        <div class="followed-user">
+{% extends "base.html" %}
 
-        </div>
+{% block title %}follow page{% endblock %}
+
+{% block content %}
+    <div class="follow-user border rounded p-3">
+        <h4>Search for users to follow</h4>
+        <form class="d-flex justify-content-center" method="post" action="{% url 'user-follow' %}">
+            {% csrf_token %}
+            <div class="form-group mx-auto">
+                <label for="id_follow_username">Search user:</label>
+                {{ form.follow_username }}
+                {% if form.follow_username.errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.follow_username.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            <button type="submit" class="btn btn-primary mx-auto">Follow</button>
+        </form>
     </div>
-</body>
-</html>
+    <div class="followed-users border rounded p-3">
+        <h4>Followed Users</h4>
+        <ul class="list-group">
+            {% for user_follow in follow_data.followed_users %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ user_follow.followed_user.username }}
+                    <a href="{% url 'user-unfollow' user_follow.pk %}" class="btn btn-danger">Unfollow</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="users-following border rounded p-3 mt-3">
+        <h4>Users Following You</h4>
+        <ul class="list-group">
+            {% for user_follow in follow_data.users_following %}
+                <li class="list-group-item d-flex justify-content-center">
+                    {{ user_follow.user.username }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

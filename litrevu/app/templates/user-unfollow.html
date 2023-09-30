@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}{% endblock %}
+
+{% block content %}
+    <form class="border rounded p-3" method="post">{% csrf_token %}
+    <p class="mb-3">Are you sure to unfollow "{{ object.followed_user.username }}"?</p>
+    <button type="submit" class="btn btn-danger">Confirm</button>
+    </form>
+{% endblock %}

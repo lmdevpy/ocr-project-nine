@@ -16,23 +16,29 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from app.views import HomeView, CustomFormView, CustomLogoutView, CustomSignUpView, TicketCreateView,\
+from app.views import CustomLogoutView, CustomSignUpView, TicketCreateView,\
     TicketListView, TicketUpdateView, ReviewCreateView, ReviewListView, ReviewUpdateView, TicketAndReviewCreateView, \
-    FollowUserView
+    FollowView, PostView, UnfollowView, CustomLoginView, ReviewDeleteView, TicketDeleteView, FeedView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', HomeView.as_view(), name='home'),
-    path('login/', CustomFormView.as_view(), name='login'),
+    path('', FeedView.as_view(), name='feeds'),
+    path('login/', CustomLoginView.as_view(), name='login'),
     path('logout/', CustomLogoutView.as_view(), name='logout'),
     path('signup/', CustomSignUpView.as_view(), name='signup'),
     path('ticket/create', TicketCreateView.as_view(), name='create-ticket'),
     path('tickets/', TicketListView.as_view(), name='ticket-list'),
     path('ticket/<int:pk>/update/', TicketUpdateView.as_view(), name='ticket-update'),
+    path('ticket/<int:pk>/delete/', TicketDeleteView.as_view(), name='ticket-delete'),
     path('review/create/', TicketAndReviewCreateView.as_view(), name='create-review-and-ticket'),
     path('review/create/ticket/<int:ticket_id>/', ReviewCreateView.as_view(), name='create-review'),
     path('reviews/', ReviewListView.as_view(), name='review-list'),
-    path('Review/<int:pk>/update/', ReviewUpdateView.as_view(), name='review-update'),
-    path('follow/', FollowUserView.as_view(), name='user-follow'),
+    path('review/<int:pk>/update/', ReviewUpdateView.as_view(), name='review-update'),
+    path('review/<int:pk>/delete/', ReviewDeleteView.as_view(), name='review-delete'),
+    path('follow/', FollowView.as_view(), name='user-follow'),
+    path('unfollow/<int:pk>', UnfollowView.as_view(), name='user-unfollow'),
+    path('posts/', PostView.as_view(), name='posts'),
+    path('feeds/', FeedView.as_view(), name='feeds'),
+
 
 ]

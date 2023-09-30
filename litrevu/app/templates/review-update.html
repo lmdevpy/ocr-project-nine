@@ -1,16 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Update review</title>
-</head>
-<body>
-    <div class="container">
-        <h1>Update Review</h1>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" value="Update">
-        </form>
-    </div>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Update review{% endblock %}
+
+{% block content %}
+    <h4>Update Review</h4>
+    <form method="post" class="border rounded p-3">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+{% endblock %}

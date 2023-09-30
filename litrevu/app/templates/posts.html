@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}my posts{% endblock %}
+
+{% block content %}
+    <div class="posts">
+        {% for post in posts %}
+            <div class="single-post border rounded mb-4 p-3 position-relative" >
+                {% if post.content_type == 'REVIEW' %}
+                    <p class="position-absolute top-0 end-0">{{ post.time_created }}</p>
+                    <p class="mb-1">Review - {{ post.headline }}</p>
+                    <p>Rating: {{ post.rating }}</p>
+                    {{ post.body }}
+
+                    {% if post.ticket %}
+                        <div class="ticket-from-post border rounded mt-3 p-3 position-relative">
+                            <p class="font-weight-bold mb-2">Ticket from {{ post.ticket.user.username }}</p>
+                            <p class="position-absolute top-0 end-0">{{ post.ticket.time_created }}</p>
+                            <p>Title: {{ post.ticket.title }}</p>
+                            <p>{{ post.ticket.description }}</p>
+                            <img src="{{ post.ticket.image.url }}" alt="{{ post.ticket.title }}" class="img-fluid" />
+                        </div>
+                    {% endif %}
+                    <a href="{% url 'review-update' post.id %}" class="btn btn-primary mt-3">Modify Review</a>
+                    <a href="{% url 'review-delete' post.id %}" class="btn btn-danger mt-3">Delete Review</a>
+                {% endif %}
+                {% if post.content_type == 'TICKET' %}
+                <div class="ticket-from-post border rounded mt-3 p-3 position-relative">
+                    <p class="position-absolute top-0 end-0">{{ post.time_created }}</p>
+                    <p class="mb-1">Ticket - Title: {{ post.title }}</p>
+                    <p>{{ post.description }}</p>
+                    <img src="{{ post.image.url }}" alt="{{ post.title }}" class="img-fluid" />
+
+                    <a href="{% url 'ticket-update' post.id %}" class="btn btn-primary mt-3">Modify Ticket</a>
+                    <a href="{% url 'ticket-delete' post.id %}" class="btn btn-danger mt-3">Delete Ticket</a>
+                </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

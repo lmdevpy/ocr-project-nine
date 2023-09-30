@@ -1,19 +1,17 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>reviews</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}reviews{% endblock %}
+
+{% block content %}
     <div class="container">
-        <h1>My Reviews</h1>
-        <ul>
+        <h3 class="mb-4">My Reviews</h3>
+        <ul class="list-group">
             {% for review in reviews %}
-              <li>
-                {{ review.pk }} - {{ review.headline }}
-                <a href="{% url 'review-update' review.pk %}" class="btn btn-primary">Modify</a>
-              </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ review.pk }} - {{ review.headline }} - {{ review.user }}
+                    <a href="{% url 'review-update' review.pk %}" class="btn btn-primary">Modify</a>
+                </li>
             {% endfor %}
         </ul>
     </div>
-</body>
-</html>
+{% endblock %}

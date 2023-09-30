@@ -1,16 +1,27 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Ticket Creation</title>
-    </head>
-<body>
-    <div class="ticket-container">
-        <h1>Create a Ticket</h1>
+{% extends "base.html" %}
+
+{% block title %}Ticket Creation{% endblock %}
+
+{% block content %}
+    <div class="ticket-container text-center">
+        <h3 class="mb-4">Create a Ticket</h3>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Submit</button>
+            <div class="row">
+                <div class="form-group">
+                        <label class="fill-available-width" for="{{ form.title.id_for_label }}">Title</label>
+                        {{ form.title }}
+                </div>
+                <div class="form-group">
+                    <label class="fill-available-width" for="{{ form.description.id_for_label }}">Description</label>
+                    {{ form.description }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.image.id_for_label }}">Image</label>
+                    {{ form.image }}
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-4">Submit</button>
         </form>
     </div>
-</body>
-</html>
+{% endblock %}

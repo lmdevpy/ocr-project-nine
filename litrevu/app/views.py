@@ -3,18 +3,12 @@ from django.urls import reverse, reverse_lazy
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth import authenticate, login
-from django.views.generic import ListView
-from django.views.generic import UpdateView
-from django.views.generic.edit import FormView, CreateView
-from django.views.generic.base import TemplateView
+from django.views.generic import ListView, UpdateView, DeleteView, FormView, CreateView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django import forms
+from django.db.models import Value, CharField, Q
 from .models import Ticket, User, Review, UserFollows
 from .forms import TicketCreationForm, ReviewCreationForm, TicketAndReviewForm, FollowUserForm
-
-
-class HomeView(LoginRequiredMixin, TemplateView):
-    template_name = 'home.html'
+from itertools import chain
 
 
 class CustomLogoutView(LogoutView):
@@ -46,46 +40,24 @@ class CustomLoginView(LoginView):
     template_name = 'login.html'
 
 
-class CustomLoginForm(forms.Form):
-    username = forms.CharField(max_length=150)
-    password = forms.CharField(widget=forms.PasswordInput)
-
-
-class CustomFormView(FormView):
-    template_name = 'login.html'
-    form_class = CustomLoginForm
-
-    def form_valid(self, form):
-        username = form.cleaned_data.get('username')
-        password = form.cleaned_data.get('password')
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            login(self.request, user)
-            return redirect('home')
-        return self.form_invalid(form)
-
-
-class TicketCreateView(CreateView):
+class TicketCreateView(LoginRequiredMixin, CreateView):
     model = Ticket
     form_class = TicketCreationForm
     template_name = 'create-ticket.html'
-    # success_url = reverse_lazy('ticket-list')
-
-    def get_success_url(self):
-        return reverse_lazy('ticket-list')
+    success_url = reverse_lazy('ticket-list')
 
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
 
 
-class TicketListView(ListView):
+class TicketListView(LoginRequiredMixin, ListView):
     model = Ticket
     template_name = 'ticket-list.html'
     context_object_name = 'tickets'
 
 
-class TicketUpdateView(UpdateView):
+class TicketUpdateView(LoginRequiredMixin, UpdateView):
     model = Ticket
     fields = ['title', 'description', 'image']
     template_name = 'ticket-update.html'
@@ -94,7 +66,7 @@ class TicketUpdateView(UpdateView):
         return reverse('ticket-list')
 
 
-class ReviewCreateView(CreateView):
+class ReviewCreateView(LoginRequiredMixin, CreateView):
     model = Review
     form_class = ReviewCreationForm
     template_name = 'create-review.html'
@@ -119,13 +91,13 @@ class ReviewCreateView(CreateView):
         return super().form_valid(form)
 
 
-class ReviewListView(ListView):
+class ReviewListView(LoginRequiredMixin, ListView):
     model = Review
     template_name = 'review-list.html'
     context_object_name = 'reviews'
 
 
-class ReviewUpdateView(UpdateView):
+class ReviewUpdateView(LoginRequiredMixin, UpdateView):
     model = Review
     fields = ['headline', 'rating', 'body']
     template_name = 'review-update.html'
@@ -134,21 +106,35 @@ class ReviewUpdateView(UpdateView):
         return reverse('review-list')
 
 
-class TicketAndReviewCreateView(CreateView):
+class ReviewDeleteView(LoginRequiredMixin, DeleteView):
+    model = Review
+    template_name = 'review-delete.html'
+    success_url = reverse_lazy('posts')
+
+
+class TicketAndReviewCreateView(LoginRequiredMixin, CreateView):
     model = Ticket
     form_class = TicketAndReviewForm
     template_name = 'create-review-and-ticket.html'
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('feeds')
 
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
 
 
-class FollowUserView(FormView):
+class TicketDeleteView(LoginRequiredMixin, DeleteView):
+    model = Ticket
+    template_name = 'ticket-delete.html'
+    success_url = reverse_lazy('posts')
+
+
+class FollowView(LoginRequiredMixin, FormView, ListView):
     form_class = FollowUserForm
     template_name = 'user-follow.html'
     success_url = reverse_lazy('user-follow')
+    model = UserFollows
+    context_object_name = 'follow_data'
 
     def form_valid(self, form):
         follow_username = form.cleaned_data['follow_username']
@@ -162,11 +148,71 @@ class FollowUserView(FormView):
         kwargs['user'] = self.request.user
         return kwargs
 
+    def get_queryset(self):
+        followed_users = UserFollows.objects.filter(user=self.request.user)
+        users_following = UserFollows.objects.filter(followed_user=self.request.user)
 
-class FollowedUsersView(ListView):
-    template_name = 'user-follow.html'
-    success_url = reverse_lazy('user-follow')
+        follow_data = {
+            'followed_users': followed_users,
+            'users_following': users_following,
+        }
+
+        return follow_data
+
+
+class UnfollowView(LoginRequiredMixin, DeleteView):
     model = UserFollows
-    context_object_name = 'followed_users'
+    template_name = 'user-unfollow.html'
+    success_url = reverse_lazy('user-follow')
 
 
+class PostView(LoginRequiredMixin, TemplateView):
+    template_name = 'posts.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        reviews = Review.objects.filter(user=self.request.user)\
+            .annotate(content_type=Value('REVIEW', CharField()))
+        tickets = Ticket.objects.filter(user=self.request.user)\
+            .annotate(content_type=Value('TICKET', CharField()))
+
+        posts = sorted(
+            chain(reviews, tickets),
+            key=lambda post: post.time_created,
+            reverse=True
+        )
+
+        context['posts'] = posts
+
+        return context
+
+
+class FeedView(LoginRequiredMixin, TemplateView):
+    template_name = 'feeds.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        followed_users = UserFollows.objects.filter(
+            user=self.request.user
+            ).values_list('followed_user', flat=True)
+
+        reviews = Review.objects.filter(
+            Q(user__in=followed_users) |
+            Q(user=self.request.user) |
+            Q(ticket__user=self.request.user)
+            ).annotate(content_type=Value('REVIEW', CharField()))
+
+        tickets = Ticket.objects.filter(
+            Q(user__in=followed_users) |
+            Q(user=self.request.user)
+            ).annotate(content_type=Value('TICKET', CharField()))
+
+        feeds = sorted(
+            chain(reviews, tickets),
+            key=lambda feed: feed.time_created,
+            reverse=True
+        )
+
+        context['feeds'] = feeds
+
+        return context

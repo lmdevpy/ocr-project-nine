@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}feed page{% endblock %}
+
+{% block content %}
+    <div class="feeds">
+        <div class="text-center">
+            <a href="{% url 'create-ticket' %}" class="btn btn-secondary mb-3">Create a Ticket</a>
+            <a href="{% url 'create-review-and-ticket' %}" class="btn btn-secondary mb-3">Create a Review</a>
+        </div>
+        {% for feed in feeds %}
+            <div class="single-post border rounded mb-4 p-3 position-relative">
+                {% if feed.content_type == 'REVIEW' %}
+                    <p class="font-weight-bold mb-2">From: {{ feed.user.username }}</p>
+                    <p class="position-absolute top-0 end-0">{{ feed.time_created }}</p>
+                    <p class="mb-1">Review - {{ feed.headline }}</p>
+                    <p>Rating: {{ feed.rating }}</p>
+                    {{ feed.body }}
+
+                    {% if feed.ticket %}
+                        <div class="ticket-from-post border rounded mt-3 p-3 position-relative">
+                            <p class="font-weight-bold mb-2">Ticket from {{ feed.ticket.user.username }}</p>
+                            <p class="position-absolute top-0 end-0">{{ feed.ticket.time_created }}</p>
+                            <p>Title: {{ feed.ticket.title }}</p>
+                            <p>{{ feed.ticket.description }}</p>
+                            <img src="{{ feed.ticket.image.url }}" alt="{{ feed.ticket.title }}" class="img-fluid" />
+                        </div>
+                    {% endif %}
+                {% endif %}
+                {% if feed.content_type == 'TICKET' %}
+                    <p class="font-weight-bold mb-2">From: {{ feed.user.username }}</p>
+                    <p class="position-absolute top-0 end-0">{{ feed.time_created }}</p>
+                    <p class="mb-1">Ticket - Title: {{ feed.title }}</p>
+                    <p>{{ feed.description }}</p>
+                    <img src="{{ feed.image.url }}" alt="{{ feed.title }}" class="img-fluid" />
+
+                    <a href="{% url 'create-review' feed.id %}" class="btn btn-primary mt-3">Create Review</a>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

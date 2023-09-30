@@ -1,25 +1,25 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Review Creation</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Review Creation{% endblock %}
+
+{% block content %}
     <div class="ticket-container">
-        <div>
-            <h1>Review for :</h1>
-            <p>{{ticket.user}} posted this ticket</p>
-            <p>{{ticket.title}}</p>
-            <p>{{ticket.description}}</p>
-            <img src="{{ticket.image.url}}">
+        <div class="row">
+        <div class="col-md-6">
+            <h4>Review for:</h4>
+            <p>{{ ticket.user }} posted a ticket</p>
+            <p>Title: {{ ticket.title }}</p>
+            <p>Description: {{ ticket.description }}</p>
+            <img src="{{ ticket.image.url }}" class="img-fluid" alt="{{ ticket.title }}">
         </div>
-        <div>
-            <h1>Create a Review</h1>
+        <div class="col-md-6">
+            <h4>Create a Review</h4>
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <button type="submit">Submit</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>
     </div>
-</body>
-</html>
+    </div>
+{% endblock %}
