@@ -18,7 +18,9 @@
                             <p class="position-absolute top-0 end-0">{{ post.ticket.time_created }}</p>
                             <p>Title: {{ post.ticket.title }}</p>
                             <p>{{ post.ticket.description }}</p>
-                            <img src="{{ post.ticket.image.url }}" alt="{{ post.ticket.title }}" class="img-fluid" />
+                            {% if post.ticket.image %}
+                                <img src="{{ post.ticket.image.url }}" alt="{{ post.ticket.title }}">
+                            {% endif %}
                         </div>
                     {% endif %}
                     <a href="{% url 'review-update' post.id %}" class="btn btn-primary mt-3">Modify Review</a>
@@ -29,7 +31,9 @@
                     <p class="position-absolute top-0 end-0">{{ post.time_created }}</p>
                     <p class="mb-1">Ticket - Title: {{ post.title }}</p>
                     <p>{{ post.description }}</p>
-                    <img src="{{ post.image.url }}" alt="{{ post.title }}" class="img-fluid" />
+                    {% if post.image %}
+                        <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                    {% endif %}
 
                     <a href="{% url 'ticket-update' post.id %}" class="btn btn-primary mt-3">Modify Ticket</a>
                     <a href="{% url 'ticket-delete' post.id %}" class="btn btn-danger mt-3">Delete Ticket</a>

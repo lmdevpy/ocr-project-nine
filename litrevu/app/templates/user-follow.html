@@ -24,7 +24,7 @@
     <div class="followed-users border rounded p-3">
         <h4>Followed Users</h4>
         <ul class="list-group">
-            {% for user_follow in follow_data.followed_users %}
+            {% for user_follow in followed_users %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     {{ user_follow.followed_user.username }}
                     <a href="{% url 'user-unfollow' user_follow.pk %}" class="btn btn-danger">Unfollow</a>
@@ -35,7 +35,7 @@
     <div class="users-following border rounded p-3 mt-3">
         <h4>Users Following You</h4>
         <ul class="list-group">
-            {% for user_follow in follow_data.users_following %}
+            {% for user_follow in users_following %}
                 <li class="list-group-item d-flex justify-content-center">
                     {{ user_follow.user.username }}
                 </li>

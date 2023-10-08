@@ -1,3 +1,22 @@
 .fill-available-width {
     width: -webkit-fill-available;
 }
+
+img{
+    max-height: 200px;
+}
+
+.single-post a{
+    display: block;
+    max-width: fit-content;
+}
+
+.navbar-nav{
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
+}
+
+.navbar-nav li{
+    margin-left: 20px;
+}

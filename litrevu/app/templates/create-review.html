@@ -10,14 +10,30 @@
             <p>{{ ticket.user }} posted a ticket</p>
             <p>Title: {{ ticket.title }}</p>
             <p>Description: {{ ticket.description }}</p>
-            <img src="{{ ticket.image.url }}" class="img-fluid" alt="{{ ticket.title }}">
+            {% if ticket.image %}
+                <img src="{{ ticket.image.url }}" class="img-fluid" alt="{{ ticket.title }}">
+            {% endif %}
         </div>
         <div class="col-md-6">
-            <h4>Create a Review</h4>
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="btn btn-primary">Submit</button>
+
+                <div class="form-group">
+                    <label class="fill-available-width" for="{{ form.headline.id_for_label }}">Headline</label>
+                    {{ form.headline }}
+                </div>
+                <div class="form-group">
+                    <label class="fill-available-width" for="{{ form.rating.id_for_label }}">Rating</label>
+                    {{ form.rating }}
+                </div>
+                <div class="form-group">
+                    <label class="fill-available-width" for="{{ form.body.id_for_label }}">Body</label>
+                    <textarea class="fill-available-width" id="{{ form.body.id_for_label }}"
+                              name="{{ form.body.name }}" rows="6">
+                    </textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-3">Submit</button>
             </form>
         </div>
     </div>

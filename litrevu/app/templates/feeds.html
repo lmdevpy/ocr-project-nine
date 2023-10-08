@@ -23,7 +23,9 @@
                             <p class="position-absolute top-0 end-0">{{ feed.ticket.time_created }}</p>
                             <p>Title: {{ feed.ticket.title }}</p>
                             <p>{{ feed.ticket.description }}</p>
-                            <img src="{{ feed.ticket.image.url }}" alt="{{ feed.ticket.title }}" class="img-fluid" />
+                            {% if feed.ticket.image %}
+                                <img class="img-fluid" src="{{ feed.ticket.image.url }}" alt="{{ feed.ticket.title }}">
+                            {% endif %}
                         </div>
                     {% endif %}
                 {% endif %}
@@ -32,8 +34,9 @@
                     <p class="position-absolute top-0 end-0">{{ feed.time_created }}</p>
                     <p class="mb-1">Ticket - Title: {{ feed.title }}</p>
                     <p>{{ feed.description }}</p>
-                    <img src="{{ feed.image.url }}" alt="{{ feed.title }}" class="img-fluid" />
-
+                    {% if feed.image %}
+                        <img class="img-fluid" src="{{ feed.image.url }}" alt="{{ feed.title }}">
+                    {% endif %}
                     <a href="{% url 'create-review' feed.id %}" class="btn btn-primary mt-3">Create Review</a>
                 {% endif %}
             </div>

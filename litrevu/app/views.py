@@ -129,7 +129,7 @@ class TicketDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('posts')
 
 
-class FollowView(LoginRequiredMixin, FormView, ListView):
+class FollowView(LoginRequiredMixin, FormView):
     form_class = FollowUserForm
     template_name = 'user-follow.html'
     success_url = reverse_lazy('user-follow')
@@ -148,16 +148,14 @@ class FollowView(LoginRequiredMixin, FormView, ListView):
         kwargs['user'] = self.request.user
         return kwargs
 
-    def get_queryset(self):
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
         followed_users = UserFollows.objects.filter(user=self.request.user)
         users_following = UserFollows.objects.filter(followed_user=self.request.user)
+        context['followed_users'] = followed_users
+        context['users_following'] = users_following
 
-        follow_data = {
-            'followed_users': followed_users,
-            'users_following': users_following,
-        }
-
-        return follow_data
+        return context
 
 
 class UnfollowView(LoginRequiredMixin, DeleteView):
