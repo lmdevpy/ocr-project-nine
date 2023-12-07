@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load ratings_filters %}
 {% block title %}my posts{% endblock %}
 
 {% block content %}
@@ -9,7 +9,7 @@
                 {% if post.content_type == 'REVIEW' %}
                     <p class="position-absolute top-0 end-0">{{ post.time_created }}</p>
                     <p class="mb-1">Review - {{ post.headline }}</p>
-                    <p>Rating: {{ post.rating }}</p>
+                    <p>Rating: {{ post.rating|stars }}</p>
                     {{ post.body }}
 
                     {% if post.ticket %}

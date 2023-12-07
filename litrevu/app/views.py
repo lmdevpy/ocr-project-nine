@@ -212,5 +212,6 @@ class FeedView(LoginRequiredMixin, TemplateView):
         )
 
         context['feeds'] = feeds
+        print(feeds)
 
         return context

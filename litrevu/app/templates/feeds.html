@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load ratings_filters %}
+
 {% block title %}feed page{% endblock %}
 
 {% block content %}
@@ -14,7 +16,7 @@
                     <p class="font-weight-bold mb-2">From: {{ feed.user.username }}</p>
                     <p class="position-absolute top-0 end-0">{{ feed.time_created }}</p>
                     <p class="mb-1">Review - {{ feed.headline }}</p>
-                    <p>Rating: {{ feed.rating }}</p>
+                    <p>Rating: {{ feed.rating|stars }}</p>
                     {{ feed.body }}
 
                     {% if feed.ticket %}

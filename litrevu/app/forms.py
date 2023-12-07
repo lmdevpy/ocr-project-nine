@@ -10,17 +10,18 @@ class TicketCreationForm(forms.ModelForm):
 
 
 class ReviewCreationForm(forms.ModelForm):
+    RATING_CHOICES = [(str(i), f"{i}") for i in range(6)]
+    rating = forms.ChoiceField(choices=RATING_CHOICES, widget=forms.RadioSelect)
+
     class Meta:
         model = Review
         fields = ['headline', 'rating', 'body']
 
-        RATING_CHOICES = [(str(i), f"Rating {i}") for i in range(6)]
-        rating = forms.ChoiceField(choices=RATING_CHOICES, widget=forms.RadioSelect)
-
 
 class TicketAndReviewForm(forms.ModelForm):
+    RATING_CHOICES = [(str(i), f"{i}") for i in range(6)]
     review_headline = forms.CharField(required=True)
-    review_rating = forms.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)])
+    review_rating = forms.ChoiceField(choices=RATING_CHOICES, widget=forms.RadioSelect)
     review_body = forms.CharField(widget=forms.Textarea)
 
     class Meta:

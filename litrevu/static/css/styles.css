@@ -20,3 +20,17 @@ img{
 .navbar-nav li{
     margin-left: 20px;
 }
+
+#id_review_rating{
+    display: flex;
+    justify-content: center
+}
+
+#id_review_rating div{
+    margin-right: 10px
+}
+
+#id_rating{
+    display: flex;
+    justify-content: space-around
+}
