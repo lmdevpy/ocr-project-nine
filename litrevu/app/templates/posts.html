@@ -8,8 +8,7 @@
             <div class="single-post border rounded mb-4 p-3 position-relative" >
                 {% if post.content_type == 'REVIEW' %}
                     <p class="position-absolute top-0 end-0">{{ post.time_created }}</p>
-                    <p class="mb-1">Review - {{ post.headline }}</p>
-                    <p>Rating: {{ post.rating|stars }}</p>
+                    <p class="mb-1">{{ post.headline }} - {{ post.rating|stars }}</p>
                     {{ post.body }}
 
                     {% if post.ticket %}
@@ -29,7 +28,7 @@
                 {% if post.content_type == 'TICKET' %}
                 <div class="ticket-from-post border rounded mt-3 p-3 position-relative">
                     <p class="position-absolute top-0 end-0">{{ post.time_created }}</p>
-                    <p class="mb-1">Ticket - Title: {{ post.title }}</p>
+                    <p class="mb-1">Title: {{ post.title }}</p>
                     <p>{{ post.description }}</p>
                     {% if post.image %}
                         <img src="{{ post.image.url }}" alt="{{ post.title }}">
