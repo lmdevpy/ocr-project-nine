@@ -37,3 +37,11 @@ pip install -r requirements.txt
 ```sh
 python manage.py runserver
 ```
+
+## Information de connexion
+```sh
+username: admin
+mot de passe: admin
+
+* le superuser admin est aussi un utilisateur de l'application
+```
